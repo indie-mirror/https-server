@@ -4,6 +4,11 @@ const path = require('path')
 var ansi = require('ansi-escape-sequences')
 const httpsServer = require('../index.js')
 
+function displayDeprecationWarning() {
+  const deprecationNotice = `\n${clr(' WARNING: This module is deprecated. Do not use.', ['red', 'bg-white'])}\n${clr(httpsServer.deprecationNotice(), 'yellow')}`
+  console.log(deprecationNotice)
+}
+
 const arguments = require('minimist')(process.argv.slice(2))
 
 if (arguments._.length > 2 || arguments.help === true) {
@@ -24,12 +29,16 @@ if (arguments._.length > 2 || arguments.help === true) {
   • ${usageVersionOption}\t\t\tDisplay the version.
   `.replace(/\n$/, '').replace(/^\n/, '')
 
+  displayDeprecationWarning()
   console.log(usage)
   process.exit()
 }
 
 if (arguments.version !== undefined) {
   const version = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf-8')).version
+
+  displayDeprecationWarning()
+
   console.log(`  https-server v${version}\n`)
   process.exit()
 }
@@ -54,9 +63,13 @@ if (arguments.global !== undefined) {
 }
 
 if (!fs.existsSync(pathToServe)) {
+  displayDeprecationWarning()
+
   console.log(` 🤔 Error: could not find path ${pathToServe}\n`)
   process.exit(1)
 }
+
+displayDeprecationWarning()
 
 // Start the server.
 httpsServer.serve({

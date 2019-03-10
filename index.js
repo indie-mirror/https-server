@@ -43,17 +43,24 @@ class HttpsServer {
   serve (options) {
     // The options parameter object and all supported properties on the options parameter
     // object are optional. Check and populate the defaults.
+    const self = this
     if (options === undefined) options = {}
     const pathToServe = typeof options.path === 'string' ? options.path : '.'
     const port = typeof options.port === 'number' ? options.port : 443
     const global = typeof options.global === 'boolean' ? options.global : false
     const callback = typeof options.callback === 'function' ? options.callback : function () {
+      //
+      // Callback.
+      //
       const serverPort = this.address().port
       let portSuffix = ''
       if (serverPort !== 443) {
         portSuffix = `:${serverPort}`
       }
       const location = global ? os.hostname() : `localhost${portSuffix}`
+
+      self.displayDeprecationWarning()
+
       console.log(` 🎉 Serving ${pathToServe} on https://${location}\n`)
     }
 
@@ -83,6 +90,17 @@ class HttpsServer {
     }
 
     return server
+  }
+
+
+  // This module is deprecated. It has been moved to @ind.ie/web-server.
+  deprecationNotice () {
+    return '\nHTTPS Server has been renamed to Indie Web Server and moved to @ind.ie/web-server. Please install the latest version of Indie Web Server instead of using this module.\n'
+  }
+
+  displayDeprecationWarning() {
+    const deprecationWarning = `\nWARNING: THIS MODULE IS DEPRECATED – DO NOT USE.\n${this.deprecationNotice()}`
+    console.log(deprecationWarning)
   }
 
   //

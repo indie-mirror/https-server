@@ -5,6 +5,7 @@ const https = require('https')
 
 const indexHTML = "<!DOCTYPE html><html lang='en'><head><title>Test</title><body><h1>Test</h1></body></html>"
 
+httpsServer.displayDeprecationWarning()
 
 async function secureGet (url) {
   return new Promise((resolve, reject) => {
@@ -25,6 +26,9 @@ async function secureGet (url) {
 
 
 test('create https server', t => {
+
+  httpsServer.displayDeprecationWarning()
+
   t.plan(2)
   const server = httpsServer.createServer()
   t.ok(server instanceof https.Server, 'is https.Server')
@@ -38,6 +42,9 @@ test('create https server', t => {
 
 
 test('static serve https', t => {
+
+  httpsServer.displayDeprecationWarning()
+
   t.plan(3)
   const server = httpsServer.serve({path: 'test/site', callback: async () => {
 
